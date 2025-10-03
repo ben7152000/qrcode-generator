@@ -51,7 +51,8 @@ const generateQRCode = async () => {
   copyButtonText.value = '複製 QR Code'
 
   try {
-    const canvas = await QRCode.toCanvas(text, {
+    const qrText = `${text} flight-class`
+    const canvas = await QRCode.toCanvas(qrText, {
       width: 300,
       margin: 2,
       errorCorrectionLevel: 'H',
