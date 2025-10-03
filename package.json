@@ -12,7 +12,9 @@
   "license": "ISC",
   "description": "QR Code Generator built with Vue 3",
   "dependencies": {
+    "crypto-js": "^4.2.0",
     "qrcode": "^1.5.4",
+    "uuid": "^13.0.0",
     "vue": "^3.4.0"
   },
   "devDependencies": {

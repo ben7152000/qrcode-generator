@@ -31,6 +31,8 @@
 <script setup>
 import { ref } from 'vue'
 import QRCode from 'qrcode'
+import { v4 as uuidv4 } from 'uuid'
+import { encrypt } from '../utils/crypto'
 
 const textInput = ref('')
 const showError = ref(false)
@@ -39,11 +41,15 @@ const qrcodeContainer = ref(null)
 const copyButtonText = ref('複製 QR Code')
 
 const generateQRCode = async () => {
-  const text = textInput.value.trim()
+  let text = textInput.value.trim()
 
   if (!text) {
     showError.value = true
     return
+  }
+
+  if (!text.startsWith('http://') && !text.startsWith('https://')) {
+    text = 'https://' + text
   }
 
   showError.value = false
@@ -51,7 +57,11 @@ const generateQRCode = async () => {
   copyButtonText.value = '複製 QR Code'
 
   try {
-    const qrText = `${text} flight-class`
+    const token = uuidv4()
+    const encryptedToken = encrypt(token)
+    const url = new URL(text)
+    url.searchParams.append('token', encryptedToken)
+    const qrText = url.toString()
     const canvas = await QRCode.toCanvas(qrText, {
       width: 300,
       margin: 2,
