@@ -31,6 +31,7 @@ import { ref } from 'vue'
 import QRCode from 'qrcode'
 import { v4 as uuidv4 } from 'uuid'
 import { encrypt } from '../utils/crypto'
+import axios from 'axios'
 
 const textInput = ref('https://flight-class.pages.dev')
 const showActionButtons = ref(false)
@@ -65,6 +66,15 @@ const generateQRCode = async () => {
     qrcodeContainer.value.appendChild(wrapper)
 
     showActionButtons.value = true
+
+    console.log(token)
+    await axios.post('https://flight-class-server.ben7152000.workers.dev/api/users', {
+      token: token
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   } catch (error) {
     console.error(error)
     qrcodeContainer.value.innerHTML = '<p style="color: red;">產生 QR Code 時發生錯誤</p>'
