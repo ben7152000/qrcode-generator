@@ -59,7 +59,7 @@ const generateQRCode = async () => {
   try {
     const token = uuidv4()
     const encryptedToken = encrypt(token)
-    print(`加密 Token: ${encryptedToken}`);
+    console.log(`加密 Token: ${encryptedToken}`);
     const url = new URL(text)
     url.searchParams.append('token', encryptedToken)
     const qrText = url.toString()
