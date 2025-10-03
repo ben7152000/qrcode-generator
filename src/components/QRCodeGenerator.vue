@@ -1,16 +1,14 @@
 <template>
   <div class="container">
-    <h1>QR Code 產生器</h1>
+    <h1>QR Code 產生器 (小飛機資訊)</h1>
     <div class="input-group">
-      <label for="text-input">輸入網址</label>
       <input
         type="text"
         id="text-input"
         v-model="textInput"
         @keypress.enter="generateQRCode"
-        placeholder="https://www.google.com"
+        readonly
       >
-      <div class="error" v-if="showError">請輸入網址</div>
     </div>
 
     <button @click="generateQRCode">產生 QR Code</button>
@@ -34,8 +32,7 @@ import QRCode from 'qrcode'
 import { v4 as uuidv4 } from 'uuid'
 import { encrypt } from '../utils/crypto'
 
-const textInput = ref('')
-const showError = ref(false)
+const textInput = ref('https://flight-class.pages.dev')
 const showActionButtons = ref(false)
 const qrcodeContainer = ref(null)
 const copyButtonText = ref('複製 QR Code')
@@ -43,23 +40,12 @@ const copyButtonText = ref('複製 QR Code')
 const generateQRCode = async () => {
   let text = textInput.value.trim()
 
-  if (!text) {
-    showError.value = true
-    return
-  }
-
-  if (!text.startsWith('http://') && !text.startsWith('https://')) {
-    text = 'https://' + text
-  }
-
-  showError.value = false
   qrcodeContainer.value.innerHTML = ''
   copyButtonText.value = '複製 QR Code'
 
   try {
     const token = uuidv4()
     const encryptedToken = encrypt(token)
-    console.log(`加密 Token: ${encryptedToken}`);
     const url = new URL(text)
     url.searchParams.append('token', encryptedToken)
     const qrText = url.toString()
@@ -89,7 +75,6 @@ const copyQRCode = async () => {
   const canvas = qrcodeContainer.value.querySelector('canvas')
   if (canvas) {
     try {
-      // 將 canvas 轉換為 blob
       canvas.toBlob(async (blob) => {
         const item = new ClipboardItem({ 'image/png': blob })
         await navigator.clipboard.write([item])
@@ -154,11 +139,15 @@ input[type="text"] {
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.3s;
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: not-allowed;
+  text-align: center;
 }
 
 input[type="text"]:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #e0e0e0;
 }
 
 button {
