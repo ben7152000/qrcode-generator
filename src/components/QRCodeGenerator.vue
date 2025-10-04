@@ -68,7 +68,7 @@ const generateQRCode = async () => {
     showActionButtons.value = true
 
     await axios.post('https://flight-class-server.ben7152000.workers.dev/api/users', {
-      token: encryptedToken
+      token: token
     }, {
       headers: {
         'Content-Type': 'application/json'
